@@ -90,6 +90,11 @@ print_footer() {
     printf "${BLUE}└─────────────────────────┴──────────┴─────────────────┴──────────────────────────────────────────────────┘${RESET}\n"
 }
 
+# Function to print a horizontal separator
+print_separator() {
+    printf "${BLUE}├─────────────────────────┼──────────┼─────────────────┼──────────────────────────────────────────────────┤${RESET}\n"
+}
+
 # Function to process and print a group of services
 print_group() {
     local status=$1 group_services=$2
@@ -98,21 +103,52 @@ print_group() {
     echo -e "\n${BOLD}${WHITE}Services with status: ${status}${RESET}"
     print_header
 
-    for service in $group_services; do
+    # Sort services and split into disabled and other
+    local disabled_services=()
+    local other_services=()
+
+    while read -r service; do
         enabled=$(systemctl is-enabled "${service}.service" 2>/dev/null)
-        description=$(systemctl show -p Description "${service}.service" 2>/dev/null | cut -d'=' -f2-)
-        active_timestamp=$(systemctl show -p ActiveEnterTimestamp "${service}.service" 2>/dev/null | cut -d'=' -f2-)
-        runtime=$(calculate_runtime "$active_timestamp")
-        
-        # Truncate 'enabled' status to fit in the column
-        enabled="${enabled:0:10}"
-        
-        # Replace special characters in service name
-        service=$(echo "$service" | tr -cd '[:print:]')
-        
-        print_service "$service" "$enabled" "$runtime" "$description"
+        if [[ "$enabled" == "disabled" ]]; then
+            disabled_services+=("$service")
+        else
+            other_services+=("$service")
+        fi
+    done < <(echo "$group_services" | tr ' ' '\n' | sort)
+
+    # Print other services first
+    for service in "${other_services[@]}"; do
+        print_service_details "$service"
     done
+
+    # Print separator if there are both types of services
+    if [[ ${#disabled_services[@]} -gt 0 && ${#other_services[@]} -gt 0 ]]; then
+        print_separator
+    fi
+
+    # Print disabled services
+    for service in "${disabled_services[@]}"; do
+        print_service_details "$service"
+    done
+
     print_footer
+}
+
+# Function to print service details
+print_service_details() {
+    local service=$1
+    local enabled=$(systemctl is-enabled "${service}.service" 2>/dev/null)
+    local description=$(systemctl show -p Description "${service}.service" 2>/dev/null | cut -d'=' -f2-)
+    local active_timestamp=$(systemctl show -p ActiveEnterTimestamp "${service}.service" 2>/dev/null | cut -d'=' -f2-)
+    local runtime=$(calculate_runtime "$active_timestamp")
+    
+    # Truncate 'enabled' status to fit in the column
+    enabled="${enabled:0:10}"
+    
+    # Replace special characters in service name
+    service=$(echo "$service" | tr -cd '[:print:]')
+    
+    print_service "$service" "$enabled" "$runtime" "$description"
 }
 
 # Default to showing only active services
