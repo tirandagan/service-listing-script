@@ -1,0 +1,14 @@
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore editor files
+*.swp
+*.swo
+*~
+
+# Ignore log files
+*.log
+
+# Ignore any compiled binaries
+*.out
