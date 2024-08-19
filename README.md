@@ -50,6 +50,29 @@ To list all active services:
 sudo ./list_services.sh --active
 ```
 
+## Sample Output
+
+Below is a sample of what the output might look like. Note that actual colors will be displayed in the terminal.
+
+```
+Services with status: active
+┌─────────────────────────┬──────────┬─────────────────┬──────────────────────────────────────────────────┐
+│Service                  │Enabled   │Runtime          │Description                                       │
+├─────────────────────────┼──────────┼─────────────────┼──────────────────────────────────────────────────┤
+│[white]systemd-journald       [blue]│[green]static   [blue]│[white]0d 02h:15m:30s [blue]│[white]Journal Service                               [blue]│
+│[white]dbus                   [blue]│[green]static   [blue]│[white]0d 02h:15m:28s [blue]│[white]D-Bus System Message Bus                      [blue]│
+│[white]NetworkManager         [blue]│[green]enabled  [blue]│[white]0d 02h:15m:25s [blue]│[white]Network Manager                               [blue]│
+│[white]wpa_supplicant         [blue]│[green]enabled  [blue]│[white]0d 02h:15m:24s [blue]│[white]WPA supplicant                                [blue]│
+│[white]ssh                    [blue]│[green]enabled  [blue]│[white]0d 02h:15m:23s [blue]│[white]OpenBSD Secure Shell server                   [blue]│
+│[white]cron                   [blue]│[green]enabled  [blue]│[white]0d 02h:15m:22s [blue]│[white]Regular background program processing daemon  [blue]│
+└─────────────────────────┴──────────┴─────────────────┴──────────────────────────────────────────────────┘
+```
+
+In the actual terminal output:
+- The table borders will be in blue
+- Service names, runtimes, and descriptions will be in white
+- The "Enabled" status will be in green for "enabled" and yellow for other statuses
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
