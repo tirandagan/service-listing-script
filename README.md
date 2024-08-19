@@ -1,6 +1,6 @@
 # Service Listing Script
 
-This Bash script provides a colorful and informative display of system services on a Linux system, particularly focused on systems using systemd.
+This Bash script provides a colorful and informative display of system services on a Linux system, particularly focused on systems using systemd. Compatible with Raspberry PI (Raspbian), Debian and most flavors of linux.
 
 ## Features
 
